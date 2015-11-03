@@ -14,8 +14,34 @@
 CY_ISR_PROTO(Timer1ISR);
 CY_ISR_PROTO(Spi1ISR);
 
+static int gCounter = 0;
+
+
 CY_ISR(Timer1ISR)
 {
+    gCounter++;
+    
+    switch (gCounter) {
+    case 10:
+        PinLedGreen_Write(1);
+        PinLedBlue_Write(0);
+        PinLedRed_Write(0);
+        break;
+    case 20:
+        PinLedGreen_Write(0);
+        PinLedBlue_Write(1);
+        PinLedRed_Write(0);
+        break;
+    case 30:
+        PinLedGreen_Write(0);
+        PinLedBlue_Write(0);
+        PinLedRed_Write(1);
+        break;
+        
+    case 40:
+        gCounter = 0;
+        break;
+    }       
 }
 
 CY_ISR(Spi1ISR)
