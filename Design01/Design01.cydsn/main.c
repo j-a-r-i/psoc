@@ -3,6 +3,8 @@
  * UNPUBLISHED, LICENSED SOFTWARE.
  * =========================================*/
 #include <project.h>
+#include "hw.h"
+#include <..\..\..\drivers\ds1820.h>
 
 CY_ISR_PROTO(Timer1ISR);
 CY_ISR_PROTO(Spi1ISR);
@@ -55,6 +57,12 @@ CY_ISR(Timer1ISR)
         PinLedRed_Write(LED_ON);
         gCounter = 0;
         break;
+    case 4:
+        ds1820_measure(PIN_OW1);
+        break;
+    case 5:
+        ds1820_read_temp(PIN_OW1);
+        break;
     }       
 }
 
@@ -70,6 +78,8 @@ int main()
     spi_Init();
     timer1_Init();
     CyBle_Init();
+    
+    ds1820_init(PIN_OW1);
     
     // Start interrupts
     //
