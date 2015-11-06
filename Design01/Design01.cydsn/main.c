@@ -9,6 +9,30 @@ CY_ISR_PROTO(Spi1ISR);
 
 static int gCounter = 0;
 
+#define LED_ON   0
+#define LED_OFF  1
+
+//------------------------------------------------------------------------------
+void AppCallback(uint32 event, void* eventParam)
+{
+    switch (event) {
+    case CYBLE_EVT_STACK_ON:
+        break;
+    case CYBLE_EVT_TIMEOUT:
+        break;
+    case CYBLE_EVT_HARDWARE_ERROR:
+        break;
+    case CYBLE_EVT_HCI_STATUS:
+        break;
+    /*case :
+        break;
+    case :
+        break;
+    case :
+        break;*/
+    }
+}
+
 //------------------------------------------------------------------------------
 CY_ISR(Timer1ISR)
 {
@@ -16,19 +40,19 @@ CY_ISR(Timer1ISR)
     
     switch (gCounter) {
     case 1:
-        PinLedGreen_Write(0);
-        PinLedBlue_Write(1);
-        PinLedRed_Write(1);
+        PinLedGreen_Write(LED_ON);
+        PinLedBlue_Write(LED_OFF);
+        PinLedRed_Write(LED_OFF);
         break;
     case 2:
-        PinLedGreen_Write(1);
-        PinLedBlue_Write(0);
-        PinLedRed_Write(1);
+        PinLedGreen_Write(LED_OFF);
+        PinLedBlue_Write(LED_ON);
+        PinLedRed_Write(LED_OFF);
         break;
     case 3:
-        PinLedGreen_Write(1);
-        PinLedBlue_Write(1);
-        PinLedRed_Write(0);
+        PinLedGreen_Write(LED_OFF);
+        PinLedBlue_Write(LED_OFF);
+        PinLedRed_Write(LED_ON);
         gCounter = 0;
         break;
     }       
@@ -53,10 +77,15 @@ int main()
     isrTimer1_StartEx(Timer1ISR);
     spi_SCB_IRQ_StartEx(Spi1ISR);
     
-    CyGlobalIntEnable; /* enable global interrupts. */
+    CyBle_Start(AppCallback);
+    
+    CyGlobalIntEnable; // enable global interrupts
     
     for(;;)
     {
-        /* Place your application code here. */
+        if(CyBle_GetState() == CYBLE_STATE_CONNECTED) {
+            
+        }
+        CyBle_ProcessEvents();
     }
 }
