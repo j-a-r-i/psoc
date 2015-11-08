@@ -5,12 +5,13 @@
 #include <project.h>
 #include "hw.h"
 #include <..\..\..\drivers\ds1820.h>
+#include "ble1_hts.h"
 
 CY_ISR_PROTO(Timer1ISR);
 CY_ISR_PROTO(Spi1ISR);
 
 static int gCounter = 0;
-
+static int gEnabled = 0;
 #define LED_ON   0
 #define LED_OFF  1
 
@@ -19,6 +20,8 @@ void AppCallback(uint32 event, void* eventParam)
 {
     switch (event) {
     case CYBLE_EVT_STACK_ON:
+        //WatchdogTimer_Stop();
+        CyBle_GappStartAdvertisement(CYBLE_ADVERTISING_FAST);
         break;
     case CYBLE_EVT_TIMEOUT:
         break;
@@ -26,12 +29,27 @@ void AppCallback(uint32 event, void* eventParam)
         break;
     case CYBLE_EVT_HCI_STATUS:
         break;
+        
+    case CYBLE_EVT_GAPP_ADVERTISEMENT_START_STOP:
+        break;
     /*case :
         break;
     case :
         break;
     case :
         break;*/
+    }
+}
+
+//------------------------------------------------------------------------------
+void HtsCallback(uint32 event, void* eventParam)
+{
+    switch (event) {
+        case CYBLE_EVT_HTSS_INDICATION_ENABLED:
+            gEnabled = 1;
+            break;
+        case CYBLE_EVT_HTSS_INDICATION_DISABLED:
+            gEnabled = 0;
     }
 }
 
@@ -84,10 +102,11 @@ int main()
     // Start interrupts
     //
     timer1_Start();
-    isrTimer1_StartEx(Timer1ISR);
+    //isrTimer1_StartEx(Timer1ISR);
     spi_SCB_IRQ_StartEx(Spi1ISR);
     
     CyBle_Start(AppCallback);
+    CyBle_HtsRegisterAttrCallback(HtsCallback);
     
     CyGlobalIntEnable; // enable global interrupts
     
