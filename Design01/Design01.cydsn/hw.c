@@ -7,7 +7,7 @@
 
 // Do nothing. This function is not needed with PSOC.
 //
-void config_port_mode (uint8_t pin, uint8_t out)
+void port_mode (uint8_t pin, uint8_t out)
 {
 }
 
@@ -16,7 +16,7 @@ void delay_us(uint16_t usDelay)
     CyDelayUs(usDelay);
 }
 
-void config_port_set (uint8_t pin)
+void port_set (uint8_t pin)
 {
     switch (pin)
     {
@@ -29,7 +29,7 @@ void config_port_set (uint8_t pin)
     }
 }
 
-void config_port_clear (uint8_t pin)
+void port_clear (uint8_t pin)
 {
     switch (pin)
     {
@@ -42,7 +42,7 @@ void config_port_clear (uint8_t pin)
     }
 }
 
-uint8_t config_port_read (uint8_t pin)
+uint8_t port_read (uint8_t pin)
 {
     uint8_t ret = 0;
     

@@ -14,10 +14,10 @@
 
 #include <stdint.h>
 
-extern void config_port_set (uint8_t pin);
-extern void config_port_clear (uint8_t pin);
-extern void config_port_mode (uint8_t pin, uint8_t out);
-extern uint8_t config_port_read (uint8_t pin);
+extern void port_set (uint8_t pin);
+extern void port_clear (uint8_t pin);
+extern void port_mode (uint8_t pin, uint8_t out);
+extern uint8_t port_read (uint8_t pin);
 
 
 extern void delay_us(uint16_t usDelay);
